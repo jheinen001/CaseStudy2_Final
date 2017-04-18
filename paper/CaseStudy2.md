@@ -71,14 +71,15 @@ plot(circumference ~ age,
            
 legend("topleft", pch = c(16, 17, 18, 19, 20), col = c("red", "green","blue", "yellow", "orange"), legend = c("1","2","3","4","5"), title = "Trees")
 ```
-![](Orange1.png)<!-- -->
+![](https://github.com/jheinen001/CaseStudy2_Final/blob/master/paper/Orange1.PNG)<!-- -->
+
 
 Finally, we will look at comparitive boxplots of circumferences by tree, sorted in increasing order of maximum diameter.
 ```r
 boxplot(circumference~Tree,data=Orange, main="Boxplot Circumference by Tree", xlab="Tree", ylab="Circumference")
 
 ```
-![](Orange2.png)<!-- -->
+![](https://github.com/jheinen001/CaseStudy2_Final/blob/master/paper/Orange2.PNG)<!-- -->
 
 ## Conclusion
 Write Conclusion here
