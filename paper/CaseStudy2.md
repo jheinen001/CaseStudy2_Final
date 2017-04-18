@@ -16,16 +16,10 @@ Before getting started, load the doBy, ggplot2, and add text packages into your 
 if (!require("doBy")) {
   install.packages("doBy", repos="http://cran.rstudio.com/") 
 }
-```
-
-```r
 library(doBy)
 if (!require("ggplot2")) {
   install.packages("ggplot2", repos="http://cran.rstudio.com/") 
 }
-```
-
-```r
 library(ggplot2)
 ```
 
@@ -55,6 +49,10 @@ summaryBy(circumference ~ Tree, data = Orange, FUN = list(mean, median))
 ```
 Next, we would like to plot the Age in days versus the Circumference of the trees, the plot will show different symbols and colors for each tree.
 ```r
+##Plot of Age in Days versus Circumference (mm) of the trees in the data set, pch creates the different symbols
+#used for each of the tree types plotted on the chart
+##Plot of Age in Days versus Circumference (mm) of the trees in the data set, pch creates the different symbols
+#used for each of the tree types plotted on the chart
 plot(circumference ~ age,
            xlab = "Age (Days)",
            ylab = "Circumference (mm)",
@@ -62,7 +60,8 @@ plot(circumference ~ age,
            main = "Age versus Circumference",
            col = c("red", "green","blue", "yellow", "orange")[as.numeric(Tree)],
            data = Orange)
-           
+
+#Adds legend to the scatter plot to identify which symbol belongs to which tree.           
 legend("topleft", pch = c(16, 17, 18, 19, 20), col = c("red", "green","blue", "yellow", "orange"), legend = c("1","2","3","4","5"), title = "Trees")
 ```
 ![](https://github.com/jheinen001/CaseStudy2_Final/blob/master/paper/Orange1.PNG)<!-- -->
@@ -70,6 +69,7 @@ legend("topleft", pch = c(16, 17, 18, 19, 20), col = c("red", "green","blue", "y
 
 Finally, we will look at comparitive boxplots of circumferences by tree, sorted in increasing order of maximum diameter.
 ```r
+#Comparitive Boxplots of Circumferences by Tree, sorted in increasing order of maximum diameter 
 boxplot(circumference~Tree,data=Orange, main="Boxplot Circumference by Tree", xlab="Tree", ylab="Circumference")
 
 ```
