@@ -1,7 +1,6 @@
 ---
 title: "Case Study 2 Project"
 author: "Lauren Darr, Emmanuel Farrugia, John Heinen, Johnson Ekedum"
-date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
   html_document:
     theme: united
@@ -48,11 +47,18 @@ at breast height”, a standard measurement in forestry.
 
 First, we want to get the circumference mean and median for the trees.
 ```r
-
+#Run the summaryBy function with mean and median as arguments in the list function to return the mean and median by Tree
 summaryBy(circumference ~ Tree, data = Orange, FUN = list(mean, median))
-
 ```
 
+```
+##   Tree circumference.mean circumference.median
+## 1    3           94.00000                  108
+## 2    1           99.57143                  115
+## 3    5          111.14286                  125
+## 4    2          135.28571                  156
+## 5    4          139.28571                  167
+```
 Next, we would like to plot the Age in days versus the Circumference of the trees, the plot will show different symbols and colors for each tree.
 ```r
 plot(circumference ~ age,
@@ -65,13 +71,14 @@ plot(circumference ~ age,
            
 legend("topleft", pch = c(16, 17, 18, 19, 20), col = c("red", "green","blue", "yellow", "orange"), legend = c("1","2","3","4","5"), title = "Trees")
 ```
+![](Orange1.png)<!-- -->
 
 Finally, we will look at comparitive boxplots of circumferences by tree, sorted in increasing order of maximum diameter.
 ```r
 boxplot(circumference~Tree,data=Orange, main="Boxplot Circumference by Tree", xlab="Tree", ylab="Circumference")
 
 ```
-
+![](Orange2.png)<!-- -->
 
 ## Conclusion
 Write Conclusion here
