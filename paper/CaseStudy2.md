@@ -1,11 +1,5 @@
----
-title: "Case Study 2 Project"
-author: "Lauren Darr, Emmanuel Farrugia, John Heinen, Johnson Ekedum"
-output: 
-  html_document:
-    theme: united
-    highlight: zenburn
----
+# Case Study 2 Project
+Lauren Darr, Emmanuel Farrugia, Johnson Ekedum, John Heinen
 
 
 # Introduction
