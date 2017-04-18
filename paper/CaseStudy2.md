@@ -13,6 +13,7 @@ Before getting started, load the doBy, ggplot2, and add text packages into your 
 
 
 ```r
+#Install Required libraries, doBy, ggplot2,...
 if (!require("doBy")) {
   install.packages("doBy", repos="http://cran.rstudio.com/") 
 }
@@ -49,8 +50,6 @@ summaryBy(circumference ~ Tree, data = Orange, FUN = list(mean, median))
 ```
 Next, we would like to plot the Age in days versus the Circumference of the trees, the plot will show different symbols and colors for each tree.
 ```r
-##Plot of Age in Days versus Circumference (mm) of the trees in the data set, pch creates the different symbols
-#used for each of the tree types plotted on the chart
 ##Plot of Age in Days versus Circumference (mm) of the trees in the data set, pch creates the different symbols
 #used for each of the tree types plotted on the chart
 plot(circumference ~ age,
