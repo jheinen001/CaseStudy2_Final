@@ -25,9 +25,11 @@ if (!require("ggplot2")) {
 library(ggplot2)
 if (!require("lubridate")) {
   install.packages("lubridate", repos="http://cran.rstudio.com/") 
+}
 library(lubridate)
 if (!require("dyplr")) {
   install.packages("dyplr", repos="http://cran.rstudio.com/") 
+}
 library(dyplr)
 ```
 
