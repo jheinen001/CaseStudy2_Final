@@ -12,7 +12,7 @@ output:
 # Introduction
 There are two parts to this project.  The first part entails looking at the native data set Orange to analyze three tree types and their age and circumference.  First, we will find the circumference median and mean of each tree type, then we will plot the data of the tree's age versus circumference.  Finally, we will compare the circumferences of each tree type visually using boxplots.
 
-Add text for Question 3
+In Question 3, we will be analyzing the minimum and maximum monthly average temperatures for a set of countries and cities since the year 1900.  We will identify the top 20 countries and cities with the largest range in minimum and maximum temperatures in celcius.  Next, we will dive deeper into the US temperatures from 1990. Finally, we will include a comparison analysis of the two graphs, top 20 countries versus top 20 cities.
 
 This document will go through any data downloads, cleaning of data, visualization, and analysis conclusion.
 
