@@ -27,10 +27,10 @@ if (!require("lubridate")) {
   install.packages("lubridate", repos="http://cran.rstudio.com/") 
 }
 library(lubridate)
-if (!require("dyplr")) {
+if (!require("dplyr")) {
   install.packages("dyplr", repos="http://cran.rstudio.com/") 
 }
-library(dyplr)
+library(dplyr)
 ```
 
 ## Question 2 Orange Trees
@@ -96,7 +96,7 @@ First, we must read in the data to begin our analysis.
 #Read in external data set "Temp.csv".
 #Make sure to set your working directory accordingly for this project.
 #This sets the data to a variable called Temp.data
-setwd("C:/Users/Lauren/Desktop/caseStudy2/Data")
+#setwd("C:/Users/Lauren/Desktop/caseStudy2/Data")
 Temp.data <- read.csv("TEMP.csv", stringsAsFactors = FALSE )
 ```
 Next, we must clean our data to make sure that it is ready for analysis.  We will start by taking a look at the structure, view the data file, and look at the column headers.
