@@ -16,10 +16,12 @@ Add text for Question 3
 
 This document will go through any data downloads, cleaning of data, visualization, and analysis conclusion.
 
-Before getting started, load the doBy, ggplot2, and add text packages into your R workspace. We will use functions from both packages through the project.
+Before getting started, load the doBy, ggplot2, lubridate, and dyplr packages into your R workspace. We will use functions from these packages through the project.
 
 
 ```{r}
+#Following code checks if you have the packages doby, ggplot2, lubridate, and dyplr.  If you do not have, it will
+#install the packages, if you do have, then it will not reinstall, it will just load the libraries.
 if (!require("doBy")) {
   install.packages("doBy", repos="http://cran.rstudio.com/") 
 }
@@ -36,8 +38,22 @@ if (!require("ggplot2")) {
 
 ```{r}
 library(ggplot2)
+if (!require("lubridate")) {
+  install.packages("lubridate", repos="http://cran.rstudio.com/") 
+}
 ```
 
+```{r}
+library(lubridate)
+if (!require("dyplr")) {
+  install.packages("dyplr", repos="http://cran.rstudio.com/") 
+}
+```
+
+```{r}
+library(dyplr)
+
+```
 
 ## Question 2 Orange Trees
 The Orange data is native to R, so we do not have to download from anywhere.  We can move right in to answering the questions of interest for this problem.  A little information on the data:

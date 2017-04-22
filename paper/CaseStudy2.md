@@ -9,11 +9,12 @@ Add text for Question 3
 
 This document will go through any data downloads, cleaning of data, visualization, and analysis conclusion.
 
-Before getting started, load the doBy, ggplot2, and add text packages into your R workspace. We will use functions from both packages through the project.
+Before getting started, load the doBy, ggplot2, lubridate, and dyplr packages into your R workspace. We will use functions from these packages through the project.
 
 
 ```r
-#Install Required libraries, doBy, ggplot2,...
+#Following code checks if you have the packages doby, ggplot2, lubridate, and dyplr.  If you do not have, it will
+#install the packages, if you do have, then it will not reinstall, it will just load the libraries.
 if (!require("doBy")) {
   install.packages("doBy", repos="http://cran.rstudio.com/") 
 }
@@ -22,8 +23,13 @@ if (!require("ggplot2")) {
   install.packages("ggplot2", repos="http://cran.rstudio.com/") 
 }
 library(ggplot2)
+if (!require("lubridate")) {
+  install.packages("lubridate", repos="http://cran.rstudio.com/") 
+library(lubridate)
+if (!require("dyplr")) {
+  install.packages("dyplr", repos="http://cran.rstudio.com/") 
+library(dyplr)
 ```
-
 
 ## Question 2 Orange Trees
 The Orange data is native to R, so we do not have to download from anywhere.  We can move right in to answering the questions of interest for this problem.  A little information on the data:
@@ -74,6 +80,221 @@ boxplot(circumference~Tree,data=Orange, main="Boxplot Circumference by Tree", xl
 ```
 ![](https://github.com/jheinen001/CaseStudy2_Final/blob/master/paper/Orange2.PNG)<!-- -->
 
-## Conclusion
+## Question 3 Country and City Temperatures
+In Question 3, we will be analyzing the minimum and maximum monthly average temperatures for a set of countries since the year 1900.  We will first identify the top 20 countries with the largest range in minimum and maximum temperatures in celcius.  Next, we will dive deeper into the US temperatures from 1990, converting the temperatures to Farenheit, calculating yearly average land temperature as opposed to monthly average temperature in the first part of the question.  Finally for this part of Question 3, we will calculate the one year difference of average land temperature by year and provide the maximum difference with the corresponding two years.
 
-Write Conclusion here
+Next, we will take a look at a dataset of City temperatures since 1900.  Like in the first graph, we will repor the top 20 cities with the largest range in minimum and maximum temperatures, but at the city level.
+
+Finally, we will include a comparison analysis of the two graphs, top 20 countries versus top 20 cities.
+
+## Country Temperature Data
+
+First, we must read in the data to begin our analysis.
+```r
+#Read in external data set "Temp.csv".
+#Make sure to set your working directory accordingly for this project.
+#This sets the data to a variable called Temp.data
+setwd("C:/Users/Lauren/Desktop/caseStudy2/Data")
+Temp.data <- read.csv("TEMP.csv", stringsAsFactors = FALSE )
+```
+Next, we must clean our data to make sure that it is ready for analysis.  We will start by taking a look at the structure, view the data file, and look at the column headers.
+
+```r
+#first lets look at the structure of the Data
+str(Temp.data)
+#second view the data file
+View(Temp.data)
+#third look at the column headers
+colnames(Temp.data)
+```
+The structure of the data:
+```
+##'data.frame':	574223 obs. of  4 variables:
+## $ Date                           : chr  "1838-04-01" "1838-05-01" "1838-06-01" "1838-07-01" ...
+## $ Monthly.AverageTemp            : num  13 NA 23.9 26.9 24.9 ...
+## $ Monthly.AverageTemp.Uncertainty: num  2.59 NA 2.51 2.88 2.99 ...
+## $ Country                        : chr  "Afghanistan" "Afghanistan" "Afghanis
+```
+The column headers:
+```
+##[1] "Date"                            "Monthly.AverageTemp"             "Monthly.AverageTemp.Uncertainty"
+##[4] "Country"      
+```
+Now, we will check for NA's in our dataset:
+```r
+#Let's also see if there are NA's within our dataset columns
+sapply(Temp.data, function(x)  sum(is.na(x)) )
+```
+```
+##                           Date             Monthly.AverageTemp Monthly.AverageTemp.Uncertainty 
+##                              0                           32578                           31839 
+##                        Country 
+##                              0 
+```
+Finally, we will clean up our date values so that they all match and will make analysis by date possible.
+
+```r
+#Date cleanup: convert dates to "date" variables of matching format.
+ymd<- ymd(Temp.data$Date)
+mdy<- dmy(Temp.data$Date)
+ymd[is.na(ymd)]<-mdy[is.na(ymd)]
+Temp.data$Date<-ymd
+Temp.data$year <- substr(Temp.data$Date,1,4)
+Temp.data$year <- as.numeric(Temp.data$year)
+```
+
+Now we are ready to begin working with our data for analysis.  We will have to calculate the range in maximum and minimum monthly average temperature for each country.
+
+```r
+#find the difference between the maximum and the minimum monthly average temperature for each country.
+Temp.one <- Temp.data %>% 
+    select (Date,year, Country,Monthly.AverageTemp) %>% 
+    na.omit() %>% 
+    filter(year >= 1900) %>% 
+    group_by(Country)  %>% 
+  summarise(temp_diff = max(Monthly.AverageTemp) -
+              min(Monthly.AverageTemp)) %>% 
+    arrange(desc(temp_diff))
+```    
+We are able to plot our first graph to answer the question of interest in Question 3.i.
+```r
+#report/visualize top 20 countries with the maximum differences for the period since 1900.
+ggplot(Temp.one[1:20,], aes(Country,temp_diff)) + geom_col() + theme(axis.text.x=element_text(angle=90, hjust=1)) + xlab("Country") + ylab ("Range (Celcius)") + ggtitle("Top 20 temperature ranges by country") + theme(plot.title=element_text(hjust=0.5))
+```
+![](https://github.com/jheinen001/CaseStudy2_Final/blob/master/paper/Top20.PNG)<!-- -->
+    
+For Question 3.ii we will now look at a subset of the data and focus on US temperatures.  Our first task is to create a new column in the data and convert the degrees in celcius to farenheit.
+
+```r
+#Create a new column to display the monthly average land temperatures in Fahrenheit (?F).
+Temp.two <- Temp.data %>% na.omit %>% 
+  select (year, Monthly.AverageTemp,Country) %>% 
+  filter ( Country=='United States', year >= 1900 ) %>% 
+  mutate(Temp_Fahrenheit= Monthly.AverageTemp  * 9/5 + 32 ) %>% 
+  select (year, Temp_Fahrenheit)%>%
+  group_by(year) %>% 
+  summarise(Avg_land_temp=mean(Temp_Fahrenheit) )
+#Display new column
+Temp.two
+```
+Display of new converted farenheit column for 3.ii.a:
+```
+### A tibble: 114 × 2
+##    year Avg_land_temp
+##   <dbl>         <dbl>
+##1   1900      48.23885
+##2   1901      47.29085
+##3   1902      47.21720
+##4   1903      46.35905
+##5   1904      46.76120
+##6   1905      47.12420
+##7   1906      47.40815
+##8   1907      47.10920
+##9   1908      47.76005
+##10  1909      46.79930
+### ... with 104 more rows
+```
+We will now plot the average land temperature by year for 3.ii.b:
+```r
+ggplot(Temp.two,aes(year,Avg_land_temp)) + geom_line() + xlab("Year") + ylab ("Avg. Yearly Temp (Fahrenheit)") + ggtitle("Average Yearly Temperatures in the U.S. 1990-2013") + theme(plot.title=element_text(hjust=0.5))
+
+```
+![](https://github.com/jheinen001/CaseStudy2_Final/blob/master/paper/YearlyTemp.PNG)<!-- -->
+
+Finally for question 3.ii.c, we will calculate the one year difference of average land temperature by year and provide the maximum difference with the corresponding two years.
+```r
+#Calculate the one year difference of average land temperature by year and 
+#provide the maximum difference (value) with corresponding two years.
+difference_in_temp <- diff(Temp.two$Avg_land_temp)
+temp3 <- cbind(Temp.two[1:113,],difference_in_temp)
+#Display maximum difference in temp
+which.max(temp3$difference_in_temp)
+```
+Display maximum difference in temp of 21.
+```
+##[1] 21
+```
+```r
+#Display temp difference for next two years
+temp3[c(21,22),]
+```
+Display temperature difference for the following two years of 2.54 and -1.49 respectively.
+```
+##   year Avg_land_temp difference_in_temp
+##21 1920       46.7321             2.5401
+##22 1921       49.2722            -1.4895
+```
+
+We will now move to question 3.iii, in which we will work with a new data set of city temperatures.  We will first have to bring in the new data set to our workspace.
+```r
+#Read in data set.
+City.data <- read.csv("CityTemp.csv", stringsAsFactors = FALSE )
+```
+Again, we will have to clean up the data in order to make sure it is ready to use.  We will first look at the first few rows of the data, and then the structure of the data.
+```r
+# Check first rows of dataset
+head(City.data)
+```
+```
+##        Date Monthly.AverageTemp Monthly.AverageTemp.Uncertainty        City  Country Latitude Longitude
+##1 1850-01-01              15.986                           1.537 Addis Abeba Ethiopia    8.84N    38.11E
+##2 1850-02-01              18.345                           1.527 Addis Abeba Ethiopia    8.84N    38.11E
+##3 1850-03-01              18.632                           2.162 Addis Abeba Ethiopia    8.84N    38.11E
+##4 1850-04-01              18.154                           1.693 Addis Abeba Ethiopia    8.84N    38.11E
+##5 1850-05-01              17.480                           1.237 Addis Abeba Ethiopia    8.84N    38.11E
+##6 1850-06-01              17.183                           1.252 Addis Abeba Ethiopia    8.84N    38.11E
+```
+```r
+# Check structure of dataset
+str(City.data)
+```
+```
+##'data.frame':	237200 obs. of  7 variables:
+## $ Date                           : chr  "1850-01-01" "1850-02-01" "1850-03-01" "1850-04-01" ...
+## $ Monthly.AverageTemp            : num  16 18.3 18.6 18.2 17.5 ...
+## $ Monthly.AverageTemp.Uncertainty: num  1.54 1.53 2.16 1.69 1.24 ...
+## $ City                           : chr  "Addis Abeba" "Addis Abeba" "Addis Abeba" "Addis Abeba" ...
+## $ Country                        : chr  "Ethiopia" "Ethiopia" "Ethiopia" "Ethiopia" ...
+## $ Latitude                       : chr  "8.84N" "8.84N" "8.84N" "8.84N" ...
+## $ Longitude                      : chr  "38.11E" "38.11E" "38.11E" "38.11E" ...
+```
+We need to clean up the date field in this data set.
+```r
+#Date Cleaning
+ymd<- ymd(City.data$Date)
+mdy<- dmy(City.data$Date)
+ymd[is.na(ymd)]<-mdy[is.na(ymd)]
+City.data$Date<-ymd
+```
+Now we can calculate the difference between the maximum and minimum temperatures for each major city and then display a graph of the top 20 cities with maximum differences for the period since 1900.
+```r
+#Find the difference between the maximum and the minimum temperatures 
+#for each major city 
+City.one<- City.data %>% 
+  select (year,City,Monthly.AverageTemp) %>% 
+  na.omit() %>% 
+  filter(year >= 1900) %>% 
+  group_by(City)  %>% 
+  summarise(temp_diff = max(Monthly.AverageTemp) -
+              min(Monthly.AverageTemp)) %>% 
+  arrange(desc(temp_diff))
+```
+We will now display the graph and provide a written comparison analysis of this graph and the graph from 3.i.
+```r
+#visualize top 20 cities with maximum differences for the period since 1900.
+ggplot(City.one[1:20,], aes(City,temp_diff)) + geom_col() + theme(axis.text.x=element_text(angle=90, hjust=1)) + xlab("City") + ylab ("Range (Celcius)") + ggtitle("Top 20 temperature ranges by city") + theme(plot.title=element_text(hjust=0.5))
+```
+![](https://github.com/jheinen001/CaseStudy2_Final/blob/master/paper/zTop20City.PNG)<!-- -->
+
+Comparison Analysis Question 3.iv: The bar graphs depicting the top 20 countries and cities, respectively, with the greatest range in temperatures recorded since 1900 are similar. 
+Of the top 20 countries, 6 recorded maximum differences above 40?C. Of the top 20 cities, 7 recorded maximum differences above 40 degrees celcius. 
+Furthermore, no maximum difference was recorded below 30?C nor above 50?C for both cities and countries.
+However, the top 20 ranges recorded for cities cannot be used to determine the top 20 ranges recorded for countries.
+For example, the two highest maximum differences recorded for cities belong to Harbin and Changchun.
+Both of these cities reside in China, but China is not in the top 20 list of country temperature ranges.
+This discrepancy suggests that the temperatures recorded for "Countries" may not have necessarily been recorded in the "cities" that are connected to them from the other data set.
+Also, without an understanding of how the temperatures were recorded for each country we do not even know how representative the recorded temperatures are of the entire countries. 
+Overall, the maximum difference data for both countries and cities paints a picture of world temperatures as generally having ranges no larger than 50?C in any given geographical loaction.
+
+## Conclusion
+For the questions of interest in this project, we were able to utilize the skills in R that we have acquired over the semester.  We were able to pull in data, clean it, conduct analysis, and then provide various visuals.  In this particular project we worked with Orange Tree data and saw a linear correlation between age of a tree and circumference.  We also worked with Country and City temperature data and were able to analyze that data for a large period of time.
