@@ -44,7 +44,8 @@ at breast height”, a standard measurement in forestry.
 
 First, we want to get the circumference mean and median for the trees.
 ```r
-#Run the summaryBy function with mean and median as arguments in the list function to return the mean and median by Tree
+#Run the summaryBy function with mean and median as arguments in the list function to return the mean and median
+#by Tree
 summaryBy(circumference ~ Tree, data = Orange, FUN = list(mean, median))
 ```
 
@@ -69,7 +70,8 @@ plot(circumference ~ age,
            data = Orange)
 
 #Adds legend to the scatter plot to identify which symbol belongs to which tree.           
-legend("topleft", pch = c(16, 17, 18, 19, 20), col = c("red", "green","blue", "yellow", "orange"), legend = c("1","2","3","4","5"), title = "Trees")
+legend("topleft", pch = c(16, 17, 18, 19, 20), col = c("red", "green","blue", "yellow", "orange"), 
+  legend = c("1","2","3","4","5"), title = "Trees")
 ```
 ![](https://github.com/jheinen001/CaseStudy2_Final/blob/master/paper/Orange1.PNG)<!-- -->
 
@@ -145,7 +147,7 @@ Temp.data$year <- substr(Temp.data$Date,1,4)
 Temp.data$year <- as.numeric(Temp.data$year)
 ```
 
-Now we are ready to begin working with our data for analysis.  We will have to calculate the range in maximum and minimum monthly average temperature for each country.
+Now we are ready to begin working with our data for analysis.  We will have to calculate the range in maximum and minimum monthly average temperature for each country. We will then take a look at the data.
 
 ```r
 #find the difference between the maximum and the minimum monthly average temperature for each country.
@@ -157,11 +159,31 @@ Temp.one <- Temp.data %>%
   summarise(temp_diff = max(Monthly.AverageTemp) -
               min(Monthly.AverageTemp)) %>% 
     arrange(desc(temp_diff))
+Temp.one
 ```    
+```
+### A tibble: 241 × 2
+##        Country temp_diff
+##          <chr>     <dbl>
+##1    Kazakhstan    49.163
+##2      Mongolia    48.010
+##3        Russia    46.682
+##4        Canada    43.532
+##5    Uzbekistan    42.698
+##6  Turkmenistan    40.579
+##7       Belarus    39.338
+##8       Finland    39.068
+##9       Estonia    38.815
+##10      Ukraine    38.660
+### ... with 231 more rows
+```
+
 We are able to plot our first graph to answer the question of interest in Question 3.i.
 ```r
 #report/visualize top 20 countries with the maximum differences for the period since 1900.
-ggplot(Temp.one[1:20,], aes(Country,temp_diff)) + geom_col() + theme(axis.text.x=element_text(angle=90, hjust=1)) + xlab("Country") + ylab ("Range (Celcius)") + ggtitle("Top 20 temperature ranges by country") + theme(plot.title=element_text(hjust=0.5))
+ggplot(Temp.one[1:20,], aes(Country,temp_diff)) + geom_col() + theme(axis.text.x=element_text(angle=90, hjust=1)) +
+  xlab("Country") + ylab ("Range (Celcius)") + ggtitle("Top 20 temperature ranges by country") +
+  theme(plot.title=element_text(hjust=0.5))
 ```
 ![](https://github.com/jheinen001/CaseStudy2_Final/blob/master/paper/Top20.PNG)<!-- -->
     
@@ -198,7 +220,8 @@ Display of new converted farenheit column for 3.ii.a:
 ```
 We will now plot the average land temperature by year for 3.ii.b:
 ```r
-ggplot(Temp.two,aes(year,Avg_land_temp)) + geom_line() + xlab("Year") + ylab ("Avg. Yearly Temp (Fahrenheit)") + ggtitle("Average Yearly Temperatures in the U.S. 1990-2013") + theme(plot.title=element_text(hjust=0.5))
+ggplot(Temp.two,aes(year,Avg_land_temp)) + geom_line() + xlab("Year") + ylab ("Avg. Yearly Temp (Fahrenheit)") +
+  ggtitle("Average Yearly Temperatures in the U.S. 1990-2013") + theme(plot.title=element_text(hjust=0.5))
 
 ```
 ![](https://github.com/jheinen001/CaseStudy2_Final/blob/master/paper/YearlyTemp.PNG)<!-- -->
@@ -267,6 +290,9 @@ ymd<- ymd(City.data$Date)
 mdy<- dmy(City.data$Date)
 ymd[is.na(ymd)]<-mdy[is.na(ymd)]
 City.data$Date<-ymd
+
+City.data$year<- substr(City.data$Date,1,4)
+City.data$year <- as.numeric(City.data$year)
 ```
 Now we can calculate the difference between the maximum and minimum temperatures for each major city and then display a graph of the top 20 cities with maximum differences for the period since 1900.
 ```r
@@ -280,11 +306,31 @@ City.one<- City.data %>%
   summarise(temp_diff = max(Monthly.AverageTemp) -
               min(Monthly.AverageTemp)) %>% 
   arrange(desc(temp_diff))
+City.one
 ```
+```
+### A tibble: 99 × 2
+##               City temp_diff
+##              <chr>     <dbl>
+##1            Harbin    53.281
+##2         Changchun    49.844
+##3            Moscow    43.956
+##4          Shenyang    43.045
+##5          Montreal    41.422
+##6              Kiev    40.784
+##7  Saint Petersburg    40.510
+##8           Toronto    38.683
+##9           Taiyuan    37.834
+##10           Peking    36.953
+### ... with 89 more rows
+```
+
 We will now display the graph and provide a written comparison analysis of this graph and the graph from 3.i.
 ```r
 #visualize top 20 cities with maximum differences for the period since 1900.
-ggplot(City.one[1:20,], aes(City,temp_diff)) + geom_col() + theme(axis.text.x=element_text(angle=90, hjust=1)) + xlab("City") + ylab ("Range (Celcius)") + ggtitle("Top 20 temperature ranges by city") + theme(plot.title=element_text(hjust=0.5))
+ggplot(City.one[1:20,], aes(City,temp_diff)) + geom_col() + theme(axis.text.x=element_text(angle=90, hjust=1)) +
+  xlab("City") + ylab ("Range (Celcius)") + ggtitle("Top 20 temperature ranges by city") +
+  theme(plot.title=element_text(hjust=0.5))
 ```
 ![](https://github.com/jheinen001/CaseStudy2_Final/blob/master/paper/zTop20City.PNG)<!-- -->
 

@@ -135,6 +135,7 @@ Temp.one <- Temp.data %>%
   summarise(temp_diff = max(Monthly.AverageTemp) -
               min(Monthly.AverageTemp)) %>% 
     arrange(desc(temp_diff))
+Temp.one
 ```    
 We are able to plot our first graph to answer the question of interest in Question 3.i.
 ```{r}
@@ -216,6 +217,7 @@ City.one<- City.data %>%
   summarise(temp_diff = max(Monthly.AverageTemp) -
               min(Monthly.AverageTemp)) %>% 
   arrange(desc(temp_diff))
+City.one
 ```
 We will now display the graph and provide a written comparison analysis of this graph and the graph from 3.i.
 ```{r}
