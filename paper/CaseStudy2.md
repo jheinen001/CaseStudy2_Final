@@ -181,8 +181,8 @@ Temp.one
 We are able to plot our first graph to answer the question of interest in Question 3.i.
 ```r
 #report/visualize top 20 countries with the maximum differences for the period since 1900.
-ggplot(Temp.one[1:20,], aes(Country,temp_diff)) + geom_col() + theme(axis.text.x=element_text(angle=90, hjust=1)) +
-  xlab("Country") + ylab ("Range (Celcius)") + ggtitle("Top 20 temperature ranges by country") +
+ggplot(Temp.one[1:20,], aes(Country,temp_diff)) + geom_col() + theme(axis.text.x=element_text(angle=90, hjust=1))
+  + xlab("Country") + ylab ("Range (Celcius)") + ggtitle("Top 20 temperature ranges by country") +
   theme(plot.title=element_text(hjust=0.5))
 ```
 ![](https://github.com/jheinen001/CaseStudy2_Final/blob/master/paper/Top20.PNG)<!-- -->
