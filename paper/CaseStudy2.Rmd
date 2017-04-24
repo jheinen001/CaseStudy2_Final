@@ -146,7 +146,7 @@ ggplot(Temp.one[1:20,], aes(Country,temp_diff)) + geom_col() + theme(axis.text.x
 For Question 3.ii we will now look at a subset of the data and focus on US temperatures.  Our first task is to create a new column in the data and convert the degrees in celcius to farenheit.
 
 ```{r}
-#Create a new column to display the monthly average land temperatures in Fahrenheit (?F).
+#Create a new column to display the monthly average land temperatures in Fahrenheit.
 Temp.two <- Temp.data %>% na.omit %>% 
   select (year, Monthly.AverageTemp,Country) %>% 
   filter ( Country=='United States', year >= 1900 ) %>% 
@@ -226,14 +226,14 @@ ggplot(City.one[1:20,], aes(City,temp_diff)) + geom_col() + theme(axis.text.x=el
 ```
 
 Comparison Analysis Question 3.iv: The bar graphs depicting the top 20 countries and cities, respectively, with the greatest range in temperatures recorded since 1900 are similar. 
-Of the top 20 countries, 6 recorded maximum differences above 40?C. Of the top 20 cities, 7 recorded maximum differences above 40 degrees celcius. 
-Furthermore, no maximum difference was recorded below 30?C nor above 50?C for both cities and countries.
+Of the top 20 countries, 6 recorded maximum differences above 40 Degrees Celcius. Of the top 20 cities, 7 recorded maximum differences above 40 Degrees Celcius. 
+Furthermore, no maximum difference was recorded below 30 Degrees Celcius nor above 50 Degrees Celcius for both cities and countries.
 However, the top 20 ranges recorded for cities cannot be used to determine the top 20 ranges recorded for countries.
 For example, the two highest maximum differences recorded for cities belong to Harbin and Changchun.
 Both of these cities reside in China, but China is not in the top 20 list of country temperature ranges.
 This discrepancy suggests that the temperatures recorded for "Countries" may not have necessarily been recorded in the "cities" that are connected to them from the other data set.
 Also, without an understanding of how the temperatures were recorded for each country we do not even know how representative the recorded temperatures are of the entire countries. 
-Overall, the maximum difference data for both countries and cities paints a picture of world temperatures as generally having ranges no larger than 50?C in any given geographical loaction.
+Overall, the maximum difference data for both countries and cities paints a picture of world temperatures as generally having ranges no larger than 50 Degrees Celcius in any given geographical loaction.
 
 ## Conclusion
 For the questions of interest in this project, we were able to utilize the skills in R that we have acquired over the semester.  We were able to pull in data, clean it, conduct analysis, and then provide various visuals.  In this particular project we worked with Orange Tree data and saw a linear correlation between age of a tree and circumference.  We also worked with Country and City temperature data and were able to analyze that data for a large period of time.
